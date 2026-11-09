@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reproductor Radio RADC</title>
+  <style>
+    body {
+      background-color: #0d0f12;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    /* Contenedor exacto del reproductor */
+    .player-container {
+      position: relative;
+      width: 500px; /* Ajusta según el tamaño de tu imagen */
+      display: inline-block;
+      user-select: none;
+    }
+
+    /* Imagen con fondo transparente */
+    .player-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none; /* Permite hacer clic en los botones de encima */
+    }
+
+    /* Capa de controles transparentes posicionados sobre la imagen */
+    .controls-overlay {
+      position: absolute;
+      bottom: 6.5%; /* Posición sobre el panel inferior */
+      left: 22%;
+      width: 56%;
+      height: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Botones invisibles sobre la imagen */
+    .btn-hitbox {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: transform 0.1s ease, background-color 0.2s;
+    }
+
+    .btn-hitbox:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-hitbox:active {
+      transform: scale(0.92);
+    }
+
+    /* Tamaños específicos asignados a los botones de la imagen */
+    .btn-play-pause { width: 34px; height: 34px; }
+    .btn-stop { width: 30px; height: 30px; }
+
+    /* Estilo del deslizador de volumen transparente sobre la barra */
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 6px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 215, 0, 0.8);
+      box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="player-container">
+    <!-- Tu imagen con fondo transparente -->
+    <img src="diseño.png" alt="Reproductor RADC" class="player-image">
+
+    <!-- Capa interactiva mapeada encima de la imagen -->
+    <div class="controls-overlay">
+      <button class="btn-hitbox btn-play-pause" id="playBtn" title="Reproducir / Pausar"></button>
+      <button class="btn-hitbox btn-stop" id="stopBtn" title="Detener"></button>
+      <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8" title="Volumen">
+    </div>
+  </div>
+
+  <!-- Audio Stream -->
+  <audio id="radioStream" src="https://radio.technoplayerserver.com/8010/stream" preload="none"></audio>
+
+  <script>
+    const audio = document.getElementById('radioStream');
+    const playBtn = document.getElementById('playBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const volumeControl = document.getElementById('volumeControl');
+
+    // Reproducir / Pausar
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    // Detener y reiniciar transmisión
+    stopBtn.addEventListener('click', () => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+
+    // Ajuste de volumen
+    volumeControl.addEventListener('input', (e) => {
+      audio.volume = e.target.value;
+    });
+  </script>
+
+</body>
+</html>
